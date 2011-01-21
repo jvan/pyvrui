@@ -16,19 +16,9 @@ class Demo(pyvrui.Application):
       self.modelAngles = [0.0, 0.0, 0.0]
       self.rotationSpeeds = [9.0, -31.0, 19.0]
 
-   def frame(self):
-      frameTime = pyvrui.getCurrentFrameTime()
-      for i in range(3):
-         self.modelAngles[i] += self.rotationSpeeds[i]*frameTime
-         self.modelAngles[i] = self.modelAngles[i] % 360.0
-      pyvrui.requestUpdate()
-
-   def display(self, contextData):
-      glPushMatrix()
-
-      glRotatef(self.modelAngles[0], 1.0, 0.0, 0.0)
-      glRotatef(self.modelAngles[1], 0.0, 1.0, 0.0)
-      glRotatef(self.modelAngles[2], 0.0, 0.0, 1.0)
+   def initContext(self, contextData):
+      self.displayListId = glGenLists(1)
+      glNewList(self.displayListId, GL_COMPILE)
 
       glPushAttrib(GL_LIGHTING_BIT)
       glDisable(GL_LIGHTING)
@@ -63,6 +53,24 @@ class Demo(pyvrui.Application):
       glVertex(-5.0, 5.0, 5.0)
       glEnd()
       glPopAttrib()
+   
+      glEndList()
+
+   def frame(self):
+      frameTime = pyvrui.getCurrentFrameTime()
+      for i in range(3):
+         self.modelAngles[i] += self.rotationSpeeds[i]*frameTime
+         self.modelAngles[i] = self.modelAngles[i] % 360.0
+      pyvrui.requestUpdate()
+
+   def display(self, contextData):
+      glPushMatrix()
+
+      glRotatef(self.modelAngles[0], 1.0, 0.0, 0.0)
+      glRotatef(self.modelAngles[1], 0.0, 1.0, 0.0)
+      glRotatef(self.modelAngles[2], 0.0, 0.0, 1.0)
+
+      glCallList(self.displayListId)
       
       glPopMatrix()
 
