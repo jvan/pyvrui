@@ -6,7 +6,7 @@
 #include <GL/GLContextData.h>
 
 
-class Application : public Vrui::Application
+class Application : public Vrui::Application, public GLObject
 {
 private:
    char** appDefaults;
