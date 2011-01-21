@@ -1,4 +1,4 @@
-%module pyvrui
+%module(directors="1") pyvrui
 
 %typemap(in) char** {
    // Check if input is a list
@@ -56,7 +56,36 @@
 
 %{
 #include "Application.h"
+#include "Vrui/Vrui.h"
 %}
 
+
+class GLObject
+{
+   public:
+   GLObject(void);
+   virtual ~GLObject(void);
+   virtual void initContext(GLContextData& contextData) const = 0;
+};
+
+%rename(VruiApplication) Vrui::Application;
+
+namespace Vrui {
+
+   double getCurrentFrameTime(void);
+   void requestUpdate(void);
+   
+   class Application
+   {
+      public:
+      Application(int& argc, char**& argv, char**& appDefaults);
+      virtual ~Application(void);
+      void run(void);
+      virtual void frame(void);
+      virtual void display(GLContextData& ContextData) const;
+   };
+}
+
+%feature("director") Application;
 %include "Application.h"
 
