@@ -10,11 +10,6 @@ Application::~Application(void)
 {
 }
 
-void Application::run(void)
-{
-   Vrui::Application::run();
-}
-
 void Application::initContext(GLContextData& contextData) const
 {
 }

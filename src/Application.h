@@ -5,7 +5,6 @@
 #include <GL/GLObject.h>
 #include <GL/GLContextData.h>
 
-#include <GL/gl.h>
 
 class Application : public Vrui::Application
 {
@@ -15,8 +14,6 @@ private:
 public:
    Application(int argc, char** argv);
    virtual ~Application(void);
-
-   virtual void run(void);
 
    virtual void initContext(GLContextData& contextData) const;
    virtual void display(GLContextData& contextData) const;
