@@ -8,8 +8,15 @@ except ImportError:
    sys.exit(1)
 
 class Demo(pyvrui.Application):
+
    def __init__(self):
       pyvrui.Application.__init__(self, sys.argv)
+
+   def frame(self):
+      pass
+
+   def display(self, contextData):
+      pass
 
 if __name__ == '__main__':
    app = Demo()
