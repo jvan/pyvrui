@@ -1,91 +1,29 @@
+//------------------------------------------------------------------------------
+// SWIG interface file for pyvrui project.
+//
+//------------------------------------------------------------------------------
+
 %module(directors="1") pyvrui
 
-%typemap(in) char** {
-   // Check if input is a list
-   if (PyList_Check($input)) {
-      int size = PyList_Size($input);
-      int i = 0;
-      $1 = (char**)malloc((size+1)*sizeof(char*));
-      for (i=0; i<size; i++) {
-         PyObject* o = PyList_GetItem($input, i);
-         if (PyString_Check(o)) {
-            $1[i] = PyString_AsString(PyList_GetItem($input, i));
-         } else {
-            PyErr_SetString(PyExc_TypeError, "List must contain strings");
-            free($1);
-            return NULL;
-         }
-      }
-      $1[i] = 0;
-   } else {
-      PyErr_SetString(PyExc_TypeError, "not a list");
-      return NULL;
+%feature("director:except") {
+   if ($error != NULL) {
+      throw Swig::DirectorMethodException();
    }
 }
 
-%typemap(freearg) char** {
-   free((char*) $1);
+%exception {
+   try { $action }
+   catch (Swig::DirectorException& e) { SWIG_fail; }
 }
 
-%typemap(in) (int argc, char** argv) {
-   // Check if input is a list
-   if (PyList_Check($input)) {
-      int i;
-      $1 = PyList_Size($input);
-      $2 = (char**)malloc(($1+1)*sizeof(char*));
-      for (i=0; i<$1; i++) {
-         PyObject* o = PyList_GetItem($input, i);
-         if (PyString_Check(o)) {
-            $2[i] = PyString_AsString(PyList_GetItem($input, i));
-         } else {
-            PyErr_SetString(PyExc_TypeError, "list must contain strings");
-            free($2);
-            return NULL;
-         }
-      }
-      $2[i] = 0;
-   } else {
-      PyErr_SetString(PyExc_TypeError, "not a list");
-      return NULL;
-   }
-}
+/* Enable directors for all exposed classes */
+/*%feature("director");*/
 
-%typemap(freearg) (int argc, char** argv) {
-   free((char*) $2);
-}
+/* Include global typemaps */
+%include "typemaps.i"
 
-%{
-#include "Application.h"
-#include "Vrui/Vrui.h"
-%}
-
-
-class GLObject
-{
-   public:
-   GLObject(void);
-   virtual ~GLObject(void);
-   virtual void initContext(GLContextData& contextData) const = 0;
-};
-
-%rename(VruiApplication) Vrui::Application;
-
-namespace Vrui {
-
-   double getCurrentFrameTime(void);
-   void requestUpdate(void);
-   
-   class Application
-   {
-      public:
-      Application(int& argc, char**& argv, char**& appDefaults);
-      virtual ~Application(void);
-      void run(void);
-      virtual void frame(void);
-      virtual void display(GLContextData& ContextData) const;
-   };
-}
-
-%feature("director") Application;
-%include "Application.h"
-
+/* Include interface modules */
+%include "vrui.i"
+%include "gl.i"
+%include "misc.i"
+%include "glmotif.i"
