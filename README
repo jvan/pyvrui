@@ -1,2 +1,10 @@
 pyvrui -- Python interface for VRUI library
 
+BUILDING
+========
+
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+
