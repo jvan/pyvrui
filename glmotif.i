@@ -8,6 +8,7 @@
    #include <VruiSupport/GLMotif/GLMotif>
 %}
 
+
 %import <GLMotif/Types.h>
 %import <GLMotif/Alignment.h>
 
@@ -28,10 +29,34 @@
 %pythonappend GLMotif::ToggleButton::ToggleButton %{
    self.thisown = False
 %}
+%pythonappend GLMotif::CascadeButton::CascadeButton %{
+   self.thisown = False
+%}
+%pythonappend GLMotif::Slider::Slider %{
+   self.thisown = False
+%}
+%pythonappend GLMotif::Popup::Popup %{
+   self.thisown = False
+%}
 %pythonappend GLMotif::PopupMenu::PopupMenu %{
    self.thisown = False
 %}
+%pythonappend GLMotif::PopupWindow::PopupWindow %{
+   self.thisown = False
+%}
+%pythonappend GLMotif::RowColumn::RowColumn %{
+   self.thisown = False
+%}
+%pythonappend GLMotif::Blind::Blind %{
+   self.thisown = False
+%}
+%pythonappend GLMotif::Label::Label %{
+   self.thisown = False
+%}
 %pythonappend GLMotif::Menu::Menu %{
+   self.thisown = False
+%}
+%pythonappend GLMotif::SubMenu::SubMenu %{
    self.thisown = False
 %}
 
@@ -54,13 +79,30 @@ class ToggleButtonValueChangedCallbackData : public Misc::CallbackData
       ToggleButtonValueChangedCallbackData(GLMotif::ToggleButton* sToggle, bool sSet);
 };
 
+class SliderValueChangedCallbackData : public Misc::CallbackData
+{
+   public:
+      enum ChangeReason 
+      {
+         CLICKED,DRAGGED
+      };
+
+      GLMotif::Slider* slider;
+      ChangeReason reason;
+      GLfloat value;
+
+      SliderValueChangedCallbackData(GLMotif::Slider* sSlider,ChangeReason sReason,GLfloat sValue);
+};
+
 
 %nestedworkaround GLMotif::Button::CallbackData;
-%nestedworkaround GLMotif::ToggleButton::ValueChangedCallback;
+%nestedworkaround GLMotif::ToggleButton::ValueChangedCallbackData;
+%nestedworkaround GLMotif::Slider::ValueChangedCallbackData;
 
 %{
    typedef GLMotif::Button::CallbackData ButtonCallbackData;
    typedef GLMotif::ToggleButton::ValueChangedCallbackData ToggleButtonValueChangedCallbackData;
+   typedef GLMotif::Slider::ValueChangedCallbackData SliderValueChangedCallbackData;
 %}
 
 /* Interface */
@@ -80,6 +122,14 @@ namespace GLMotif {
          virtual ~Widget(void);
          void manageChild();
          virtual Vector calcNaturalSize(void) const=0;
+
+         virtual void setBorderWidth(GLfloat newBorderWidth);
+         virtual void setBorderType(BorderType newBorderType);
+         virtual void setBorderColor(const Color& newBorderColor);
+         virtual void setBackgroundColor(const Color& newBackgroundColor);
+         virtual void setForegroundColor(const Color& newForegroundColor);
+
+         const char* getName(void) const;
    };
 
    class Container : public Widget
@@ -91,23 +141,39 @@ namespace GLMotif {
 
 }
 
-
 %include <GLMotif/WidgetManager.h>
+%include <GLMotif/StyleSheet.h>
 %include <GLMotif/RowColumn.h>
 %include <GLMotif/Popup.h>
+%include <GLMotif/Blind.h>
 %include <GLMotif/Label.h>
 
 namespace GLMotif {
 
-class Button
+class SubMenu : public RowColumn
+{
+   public:
+      SubMenu(const char* sName,Container* sParent,bool manageChild =true);
+};
+
+class Button : public Label
 {
    public:
       Button(const char* sName,Container* sParent,const char* sLabel,bool manageChild=true);
 
+      GLfloat getMarginWidth(void) const;
+      void setMarginWidth(GLfloat newMarginWidth);
+      void setHAlignment(GLFont::HAlignment newHAlignment);
+      void setVAlignment(GLFont::VAlignment newVAlignment);
+      const char* getLabel(void) const;
+      virtual void setLabel(const char* newLabel); 
+
       Misc::CallbackList& getSelectCallbacks(void); 
 };
 
-class ToggleButton
+class DecoratedButton : public Button { };
+
+class ToggleButton : public DecoratedButton
 {
    public:
       ToggleButton(const char* sName,Container* sParent,const char* sLabel,bool manageChild =true);
@@ -117,14 +183,54 @@ class ToggleButton
       bool getToggle() const;
 };
 
+class CascadeButton : public DecoratedButton
+{
+   public:
+      CascadeButton(const char* sName,Container* sParent,const char* sLabel,bool manageChild =true);
+
+      void setPopup(Popup* newPopup);
+};
+
+class DragWidget : public Widget { };
+/*{ */
+   /*public:*/
+      /*DragWidget(const char* sName,Container* sParent,bool sManageChild =true);*/
+/*};*/
+
+/*class Slider : public DragWidget*/
+/*{*/
+   /*public:*/
+      /*enum Orientation { HORIZONTAL, VERTICAL };*/
+
+      /*Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sShaftLength,bool sManageChild =true);*/
+
+      /*void setValue(GLfloat newValue);*/
+      /*void setValueRange(GLfloat newValueMin,GLfloat newValueMax,GLfloat newValueIncrement);*/
+
+      /*virtual Vector calcNaturalSize(void) const;*/
+      /*virtual ZRange calcZRange(void) const;*/
+      /*virtual void resize(const Box& newExterior);*/
+      /*virtual void draw(GLContextData& contextData) const;*/
+      /*virtual void pointerButtonDown(Event& event);*/
+      /*virtual void pointerButtonUp(Event& event);*/
+      /*virtual void pointerMotion(Event& event);*/
+
+      /*Misc::CallbackList& getValueChangedCallbacks(void);*/
+/*};*/
+
 }
 
 %include <GLMotif/Menu.h>
 %include <GLMotif/PopupMenu.h>
+%include <GLMotif/PopupWindow.h>
+
+%ignore GLMotif::Slider::Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sSliderWidth,GLfloat sShaftLength,bool sManageChild =true);
+%include <GLMotif/Slider.h>
 
 %pythoncode %{
 
 Button.SelectCallback = Callback('ButtonSelect')
 ToggleButton.ValueChangedCallback = Callback('ToggleButtonValueChanged')
+Slider.ValueChangedCallback = Callback('SliderValueChanged')
 
 %}
