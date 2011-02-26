@@ -192,31 +192,6 @@ class CascadeButton : public DecoratedButton
 };
 
 class DragWidget : public Widget { };
-/*{ */
-   /*public:*/
-      /*DragWidget(const char* sName,Container* sParent,bool sManageChild =true);*/
-/*};*/
-
-/*class Slider : public DragWidget*/
-/*{*/
-   /*public:*/
-      /*enum Orientation { HORIZONTAL, VERTICAL };*/
-
-      /*Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sShaftLength,bool sManageChild =true);*/
-
-      /*void setValue(GLfloat newValue);*/
-      /*void setValueRange(GLfloat newValueMin,GLfloat newValueMax,GLfloat newValueIncrement);*/
-
-      /*virtual Vector calcNaturalSize(void) const;*/
-      /*virtual ZRange calcZRange(void) const;*/
-      /*virtual void resize(const Box& newExterior);*/
-      /*virtual void draw(GLContextData& contextData) const;*/
-      /*virtual void pointerButtonDown(Event& event);*/
-      /*virtual void pointerButtonUp(Event& event);*/
-      /*virtual void pointerMotion(Event& event);*/
-
-      /*Misc::CallbackList& getValueChangedCallbacks(void);*/
-/*};*/
 
 }
 
