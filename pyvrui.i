@@ -23,6 +23,7 @@
 %include "typemaps.i"
 
 /* Include interface modules */
+%include "geometry.i"
 %include "vrui.i"
 %include "gl.i"
 %include "misc.i"
