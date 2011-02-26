@@ -7,6 +7,7 @@
 %{
    #include <GL/GLObject.h>
    #include <GL/GLContextData.h>
+   #include <GL/GLModels.h>
 %}
 
 %feature("director") GLObject;
@@ -27,6 +28,8 @@ struct DataItem
 
 /* Interface */
  
+%include <GL/GLModels.h>
+
 class GLObject
 {
    public:
