@@ -1,14 +1,17 @@
-include(LibFindMacros)
+find_path(VRUI_INCLUDE_PATH Vrui/Application.h)
+find_library(VRUI_LIBRARIES Vrui.g++-3 PATH_SUFFIXES lib64 lib)
 
-find_path(VRUI_INCLUDE_DIR 
-   NAMES Vrui/Application.h
-   PATHS /home/jvan/Development/pyvrui/scratch/Vrui-1.0/include
-)
+if (VRUI_INCLUDE_PATH AND VRUI_LIBRARIES)
+   set(VRUI_FOUND TRUE)
+endif()
 
-find_library(VRUI_LIBRARY
-   NAMES Vrui.g++-3
-   PATHS /home/jvan/Development/pyvrui/scratch/Vrui-1.0/lib64
-)
-
-libfind_process(VRUI)
-
+if (VRUI_FOUND)
+   if (NOT Vrui_FIND_QUIETLY)
+      message(STATUS "VRUI_INCLUDE_PATH=${VRUI_INCLUDE_PATH}")
+      message(STATUS "VRUI_LIBRARIES=${VRUI_LIBRARIES}")
+   endif()
+else()
+   if (Vrui_FIND_REQUIRED)
+      message(FATAL_ERROR "Required package Vrui NOT FOUND; try setting its path in CMAKE_PREFIX_PATH")
+   endif()
+endif()
