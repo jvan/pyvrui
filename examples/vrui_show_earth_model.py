@@ -73,7 +73,7 @@ class Application(pyvrui.Application, pyvrui.GLObject):
       dataItem = Application.DataItem()
       contextData.addDataItem(self, dataItem)
 
-      img = Image.open('/home/jvan/Development/pyvrui/examples/EarthTopography.png')
+      img = Image.open('EarthTopography.png')
       try:
          # get image meta-data (dimensions) and data
          ix, iy, image = img.size[0], img.size[1], img.tostring("raw", "RGBA", 0, -1)
