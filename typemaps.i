@@ -52,4 +52,17 @@
    free((char*) $2);
 }
 
+%typemap(in) GLfloat {
+   $1 = PyFloat_AsDouble($input);
+}
+
+%typemap(out) GLfloat {
+   $result = PyFloat_FromDouble($1);
+}
+
+%typemap(typecheck) GLfloat = float;
+
+%typemap(in) GLsizei {
+   $1 = PyLong_AsLong($input);
+}
 
