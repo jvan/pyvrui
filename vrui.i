@@ -45,12 +45,14 @@ namespace Vrui {
    /* Widget functions */
    void setMainMenu(GLMotif::PopupMenu* newMainMenu);
    GLMotif::WidgetManager* getWidgetManager(void);
+   void popdownPrimaryWidget(GLMotif::Widget* topLevel);
 
    /* Navigation functions */
    void setNavigationTransformation(const Point& center, Scalar radius);
 
    /* Time management functions */
    double getCurrentFrameTime(void);
+   double getApplicationTime(void);
    void requestUpdate(void);
 
    class Application
