@@ -5,6 +5,6 @@ BUILDING
 
 $ mkdir build
 $ cd build
-$ cmake ..
+$ cmake -DCMAKE_PREFIX_PATH=/path/to/Vrui-1.0 ..
 $ make
 
