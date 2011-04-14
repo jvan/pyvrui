@@ -102,6 +102,9 @@ class Demo(pyvrui.Application, pyvrui.GLObject):
 
       glPopMatrix()
 
+   def toolCreationCallback(self,cbdata): pass
+   def toolDestructionCallback(self,cbdata): pass
+
    def createMainMenu(self):
       widgetManager = pyvrui.getWidgetManager()
       ss = widgetManager.getStyleSheet()
