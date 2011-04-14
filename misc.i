@@ -1,21 +1,45 @@
-//------------------------------------------------------------------------------
-// Interface file for the GLMotif directory.
-//
-//------------------------------------------------------------------------------
+/******************************************************************************/
+/* Interface file for the Misc directory.                                     */
+/*                                                                            */
+/******************************************************************************/
 
 /* Includes for generated wrapper code */
 %{
    #include <Misc/CallbackData.h>
    #include <GLMotif/Button.h>
    #include <GLMotif/ToggleButton.h>
+   #include <Vrui/ToolManager.h>
+   #include <Vrui/Tools/LocatorTool.h>
+   #include <Vrui/Tools/DraggingTool.h>
+   #include <typeinfo>
 %}
 
 %feature("director") Misc::CallbackData;
 %feature("director") Misc::CallbackList;
 
+
 /* Interface */
 
 %include <Misc/CallbackData.h>
+
+%inline %{
+
+class LocatorToolCreationCallbackData : public Misc::CallbackData
+{
+   public:
+   Vrui::LocatorTool* tool;
+   LocatorToolCreationCallbackData(Vrui::LocatorTool* sTool) : tool(sTool) { }
+};
+
+class DraggingToolCreationCallbackData : public Misc::CallbackData
+{
+   public:
+   Vrui::DraggingTool* tool;
+   DraggingToolCreationCallbackData(Vrui::DraggingTool* sTool) : tool(sTool) { }
+};
+
+%}
+
 
 /* Insert wrapper code for re-routing python callbacks */
 %{
@@ -26,15 +50,53 @@
       swig_type_info* type_info;
    };
 
+   /* I think it's safe to say that I am not 100% pleased with this solution. */
+   PyObject* shenanigans(Misc::CallbackData* cbData, CallbackTypeData* typeData)
+   {
+      PyObject* obj = NULL;
+      if (strcmp(typeData->type_info->str, "ToolManagerToolCreationCallbackData *") == 0)
+      {
+         /* Cast the callback data to ToolCreationCallbakData type */
+         Vrui::ToolManager::ToolCreationCallbackData* data = dynamic_cast<Vrui::ToolManager::ToolCreationCallbackData*>(cbData);
+         
+         /* Determine the type of tool being created */
+         std::string toolName(typeid(*(data->tool)).name());
+         if (toolName.find("LocatorTool") != -1)
+         {
+            LocatorToolCreationCallbackData* cbd = new LocatorToolCreationCallbackData((Vrui::LocatorTool*)data->tool);
+            swig_type_info* ti = SWIG_TypeQueryModule(&swig_module, &swig_module,"LocatorToolCreationCallbackData *");
+            obj = SWIG_NewPointerObj(SWIG_as_voidptr(cbd), ti, 0);
+         }
+         else if (toolName.find("DraggingTool") != -1)
+         {
+            DraggingToolCreationCallbackData* cbd = new DraggingToolCreationCallbackData((Vrui::DraggingTool*)data->tool);
+            swig_type_info* ti = SWIG_TypeQueryModule(&swig_module, &swig_module, "DraggingToolCreationCallbackData *");
+            obj = SWIG_NewPointerObj(SWIG_as_voidptr(cbd), ti, 0);
+         }
+      
+      }
+      else if (strcmp(typeData->type_info->str, "ToolManagerToolDestructionCallbackData *") == 0)
+      {
+         /* Tool desctruction  */
+      }
+      else { }
+
+      return obj; 
+   }
+
    /* Callback with signature required by CallbackList::add() method */
    static void add_PythonCallback(Misc::CallbackData* cbData, void* userData)
    {
       PyObject* obj;
 
       CallbackTypeData* type_data = reinterpret_cast<CallbackTypeData*>(userData);
+         
+      obj = shenanigans(cbData, type_data);
+      if (obj == NULL)
+      {
+         obj = SWIG_NewPointerObj(SWIG_as_voidptr(cbData), type_data->type_info, 0);
+      }
       
-      obj = SWIG_NewPointerObj(SWIG_as_voidptr(cbData), type_data->type_info, 0);
-
       /* Create the arguments list */
       PyObject* arglist = Py_BuildValue("(O)", obj);
       if (arglist == NULL)
@@ -105,6 +167,7 @@ class Callback:
 
    def __init__(self, cb):
       self.cbclass = cb
+      print 'Callback.cb={0}'.format(cb)
 
    def __call__(self, f):
       def wrapper(self, data):
