@@ -24,7 +24,8 @@
 
 /* Include interface modules */
 %include "geometry.i"
+%include "misc.i"
+%include "plugins.i"
 %include "vrui.i"
 %include "gl.i"
-%include "misc.i"
 %include "glmotif.i"
