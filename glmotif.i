@@ -1,7 +1,7 @@
-//------------------------------------------------------------------------------
-// Interface file for the GLMotif directory.
-//
-//------------------------------------------------------------------------------
+/******************************************************************************/
+/* Interface file for the GLMotif directory.                                  */
+/*                                                                            */
+/******************************************************************************/
 
 /* Includes for generated wrapper code */
 %{
@@ -204,7 +204,7 @@ class DragWidget : public Widget { };
 
 %pythoncode %{
 
-Button.SelectCallback = Callback('ButtonSelect')
+Button.SelectCallback = Callback('Button')
 ToggleButton.ValueChangedCallback = Callback('ToggleButtonValueChanged')
 Slider.ValueChangedCallback = Callback('SliderValueChanged')
 
