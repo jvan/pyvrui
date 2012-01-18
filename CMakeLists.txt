@@ -11,22 +11,20 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 find_package(SWIG REQUIRED)
 include(${SWIG_USE_FILE})
 
-find_package(VruiOne REQUIRED)
+find_package(Vrui REQUIRED)
 find_package(PythonLibs)
 
-include_directories(${PYTHON_INCLUDE_PATH} ${VRUIONE_INCLUDE_PATH})
+include_directories(${PYTHON_INCLUDE_PATH} ${VRUI_INCLUDE_PATH})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 set(CMAKE_SWIG_FLAGS "")
 
 file(GLOB INTERFACE_FILES *.i)
 
-#message(STATUS " -- INTERFACE_FILES=${INTERFACE_FILES}")
-
 set_source_files_properties(${INTERFACE_FILES} PROPERTIES CPLUSPLUS ON)
 
 swig_add_module(${PROJECT_NAME} python ${PROJECT_NAME}.i)
-swig_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES} ${VRUIONE_LIBRARIES})
+swig_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES} ${VRUI_LIBRARIES})
 
 set(CMAKE_INSTALL_PREFIX "/usr")
 
