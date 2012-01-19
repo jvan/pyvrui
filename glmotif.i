@@ -20,6 +20,16 @@
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::EntrySelectCallbackData;
 
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::CallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::WidgetPopCallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::WidgetMoveCallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::PoppedWidgetIterator;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::EventProcessingLocker;
+
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::PopupWindow::CallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::PopupWindow::CloseCallbackData;
+
+
 /* GLMotif objects are managed by their parent container objects. 
    Therefore the thisown property on each class should be automatically
    set to False when constructed. */
@@ -165,8 +175,8 @@ class Button : public Label
       void setMarginWidth(GLfloat newMarginWidth);
       void setHAlignment(GLFont::HAlignment newHAlignment);
       void setVAlignment(GLFont::VAlignment newVAlignment);
-      const char* getLabel(void) const;
-      virtual void setLabel(const char* newLabel); 
+      /*const char* getLabel(void) const;*/
+      /*virtual void setLabel(const char* newLabel); */
 
       Misc::CallbackList& getSelectCallbacks(void); 
 };

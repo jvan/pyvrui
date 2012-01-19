@@ -2,7 +2,7 @@
 #define VRUI_SUPPORT_GLMOTIF_GLMOTIF_H
 
 #include <GLMotif/Alignment.h>
-#include <GLMotif/Arrow.h>
+//#include <GLMotif/Arrow.h>
 #include <GLMotif/Blind.h>
 #include <GLMotif/Button.h>
 #include <GLMotif/CascadeButton.h>
