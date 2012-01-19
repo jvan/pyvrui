@@ -9,8 +9,8 @@
    #include <GLMotif/Button.h>
    #include <GLMotif/ToggleButton.h>
    #include <Vrui/ToolManager.h>
-   #include <Vrui/Tools/LocatorTool.h>
-   #include <Vrui/Tools/DraggingTool.h>
+   #include <Vrui/LocatorTool.h>
+   #include <Vrui/DraggingTool.h>
    #include <typeinfo>
 %}
 
