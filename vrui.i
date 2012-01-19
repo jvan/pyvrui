@@ -8,15 +8,19 @@
    #include <Vrui/Vrui.h>
    #include <Vrui/Geometry.h>
    #include <Vrui/Application.h>
-   #include <Vrui/Tools/Tool.h>
-   #include <Vrui/Tools/LocatorTool.h> 
-   #include <Vrui/LocatorToolAdapter.h>
-   #include <Vrui/Tools/DraggingTool.h>
+   #include <Vrui/Tool.h>
+   #include <Vrui/LocatorTool.h> 
+   /*#include <Vrui/LocatorToolAdapter.h>*/
+   #include <Vrui/DraggingTool.h>
+   #include <Vrui/InputDeviceFeature.h>
+   #include <Misc/ConfigurationFile.h>
+   #include <Misc/FunctionCalls.h>
 %}
 
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Vrui::InputDevice::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Vrui::InputDevice::ButtonCallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Vrui::InputDevice::ValuatorCallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Vrui::ToolInputAssignment::Slot;
 
 /* Typemaps */
 
@@ -83,13 +87,15 @@ namespace Vrui {
    double getApplicationTime(void);
    void requestUpdate(void);
 }
+
 /* Nested classes and structures */
 /*%import(module="pyvrui") <Misc/CallbackData.h>*/
 class ToolManagerToolCreationCallbackData : public Misc::CallbackData
 {
    public:
       Vrui::Tool* tool;
-      ToolManagerToolCreationCallbackData(Vrui::Tool* tool);
+      Misc::ConfigurationFileSection* cfg;
+      ToolManagerToolCreationCallbackData(Vrui::Tool* tool, Misc::ConfigurationFileSection* cfg);
 };
 
 class ToolManagerToolDestructionCallbackData : public Misc::CallbackData
@@ -111,16 +117,14 @@ class ToolManagerToolDestructionCallbackData : public Misc::CallbackData
 
 %template() Plugins::FactoryManager<Vrui::ToolFactory>;
 
-/*%include <Plugins/Factory.h>*/
-
 %feature("director") Vrui::Tool;
 
 %ignore Vrui::Tool::getFactory;
-%include <Vrui/Tools/Tool.h>
-
-/*%include <Vrui/InputDevice.h>*/
+%include <Vrui/Tool.h>
 
 %include <Vrui/ToolManager.h>
+
+
 
 class LocatorToolMotionCallbackData : public Misc::CallbackData 
 { 
@@ -129,7 +133,6 @@ public:
    const Vrui::NavTrackerState& currentTransformation;
    LocatorToolMotionCallbackData(Vrui::LocatorTool* sTool,const Vrui::NavTrackerState& sCurrentTransformation);
 };
-
 class LocatorToolButtonPressCallbackData : public Misc::CallbackData 
 { 
 public:
@@ -158,57 +161,60 @@ public:
    typedef Vrui::LocatorTool::ButtonReleaseCallbackData LocatorToolButtonReleaseCallbackData;
 %}
 
-class DraggingToolDragStartCallbackData : public Misc::CallbackData 
-{ 
-   public:
-      Vrui::DraggingTool* tool;
-		const Vrui::NavTrackerState& startTransformation;
-		bool rayBased;
-		Vrui::Ray ray; 
-   DraggingToolDragStartCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sStartTransformation);
-};
-class DraggingToolDragCallbackData : public Misc::CallbackData 
-{
-   public:
-      Vrui::DraggingTool* tool;
-		const Vrui::NavTrackerState& currentTransformation;
-		const Vrui::NavTrackerState& incrementTransformation;
-   DraggingToolDragCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sCurrentTransformation, const Vrui::NavTrackerState& sIncrementTransformation);
-};
-class DraggingToolDragEndCallbackData : public Misc::CallbackData 
-{ 
-   public:
-      Vrui::DraggingTool* tool;
-		const Vrui::NavTrackerState& finalTransformation;
-		const Vrui::NavTrackerState& incrementTransformation;
-   DraggingToolDragEndCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sFinalTransformation, const Vrui::NavTrackerState& sIncrementTransformation);
-};
-class DraggingToolIdleMotionCallbackData : public Misc::CallbackData 
-{
-   public:
-      Vrui::DraggingTool* tool;
-      const Vrui::NavTrackerState& currentTransformation;
-      DraggingToolIdleMotionCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sCurrentTransformation);
+/*class DraggingToolDragStartCallbackData : public Misc::CallbackData */
+/*{ */
+   /*public:*/
+      /*Vrui::DraggingTool* tool;*/
+		/*const Vrui::NavTrackerState& startTransformation;*/
+		/*bool rayBased;*/
+		/*Vrui::Ray ray; */
+      /*DraggingToolDragStartCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sStartTransformation);*/
+/*};*/
+/*class DraggingToolDragCallbackData : public Misc::CallbackData */
+/*{*/
+   /*public:*/
+      /*Vrui::DraggingTool* tool;*/
+      /*const Vrui::NavTrackerState& currentTransformation;*/
+      /*const Vrui::NavTrackerState& incrementTransformation;*/
+      /*DraggingToolDragCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sCurrentTransformation, const Vrui::NavTrackerState& sIncrementTransformation);*/
+/*};*/
+/*class DraggingToolDragEndCallbackData : public Misc::CallbackData */
+/*{ */
+   /*public:*/
+      /*Vrui::DraggingTool* tool;*/
+		/*const Vrui::NavTrackerState& finalTransformation;*/
+		/*const Vrui::NavTrackerState& incrementTransformation;*/
+      /*DraggingToolDragEndCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sFinalTransformation, const Vrui::NavTrackerState& sIncrementTransformation);*/
+/*};*/
+/*class DraggingToolIdleMotionCallbackData : public Misc::CallbackData */
+/*{*/
+   /*public:*/
+      /*Vrui::DraggingTool* tool;*/
+      /*const Vrui::NavTrackerState& currentTransformation;*/
+      /*DraggingToolIdleMotionCallbackData(Vrui::DraggingTool* sTool, const Vrui::NavTrackerState& sCurrentTransformation);*/
    
-};
+/*};*/
 
-%nestedworkaround Vrui::DraggingTool::DragStartCallbackData;
-%nestedworkaround Vrui::DraggingTool::DragCallbackData;
-%nestedworkaround Vrui::DraggingTool::DragEndCallbackData;
-%nestedworkaround Vrui::DraggingTool::IdleMotionCallbackData;
+/*%nestedworkaround Vrui::DraggingTool::DragStartCallbackData;*/
+/*%nestedworkaround Vrui::DraggingTool::DragCallbackData;*/
+/*%nestedworkaround Vrui::DraggingTool::DragEndCallbackData;*/
+/*%nestedworkaround Vrui::DraggingTool::IdleMotionCallbackData;*/
 
-%{
-   typedef Vrui::DraggingTool::DragStartCallbackData DraggingToolDragStartCallbackData;
-   typedef Vrui::DraggingTool::DragCallbackData DraggingToolDragCallbackData;
-   typedef Vrui::DraggingTool::DragEndCallbackData DraggingToolDragEndCallbackData;
-   typedef Vrui::DraggingTool::IdleMotionCallbackData DraggingToolIdleMotionCallbackData;
-%}
+/*%{*/
+   /*typedef Vrui::DraggingTool::DragStartCallbackData DraggingToolDragStartCallbackData;*/
+   /*typedef Vrui::DraggingTool::DragCallbackData DraggingToolDragCallbackData;*/
+   /*typedef Vrui::DraggingTool::DragEndCallbackData DraggingToolDragEndCallbackData;*/
+   /*typedef Vrui::DraggingTool::IdleMotionCallbackData DraggingToolIdleMotionCallbackData;*/
+/*%}*/
 
-%include <Vrui/Tools/LocatorTool.h>
-%include <Vrui/Tools/DraggingTool.h>
 
-/*%feature("director") Vrui::LocatorToolAdapter;*/
-/*%include <Vrui/LocatorToolAdapter.h>*/
+%include <Vrui/LocatorTool.h>
+
+/*%ignore Vrui::DraggingTool::StoreStateFunction;*/
+/*%ignore Vrui::DraggingTool::GetNameFunction;*/
+/*%include <Vrui/DraggingTool.h>*/
+
+/* ERROR: related to private typedefs in DraggingTool */
 
 %pythoncode %{
 
@@ -232,8 +238,8 @@ namespace Vrui
          Application(int& argc, char**& argv, char**& appDefaults);
          virtual ~Application(void);
          void run(void);
-         /*virtual void toolCreationCallback(ToolManager::ToolCreationCallbackData* cbData);*/
-         /*virtual void toolDestructionCallback(ToolManager::ToolDestructionCallbackData* cbData);*/
+         /*virtual void toolCreationCallback(ToolManagerToolCreationCallbackData* cbData);*/
+         /*virtual void toolDestructionCallback(ToolManagerToolDestructionCallbackData* cbData);*/
          virtual void frame(void);
          virtual void display(GLContextData& ContextData) const;
    };
@@ -261,9 +267,8 @@ namespace Vrui
    LocatorTool.ButtonPressCallback = Callback('LocatorToolButtonPress')
    LocatorTool.ButtonReleaseCallback = Callback('LocatorToolButtonRelease')
 
-   DraggingTool.DragStartCallback = Callback('DraggingToolDragStart')
-   DraggingTool.DragCallback = Callback('DraggingToolDrag')
-   DraggingTool.DragEndCallback = Callback('DraggingToolDragEnd')
-   DraggingTool.IdleMotionCallback = Callback('DraggingToolIdleMotion')
+   #DraggingTool.DragStartCallback = Callback('DraggingToolDragStart')
+   #DraggingTool.DragCallback = Callback('DraggingToolDrag')
+   #DraggingTool.DragEndCallback = Callback('DraggingToolDragEnd')
+   #DraggingTool.IdleMotionCallback = Callback('DraggingToolIdleMotion')
 %}
-
