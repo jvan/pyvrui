@@ -41,6 +41,7 @@ class ComponentArray<ScalarParam,3>
 /*%ignore Geometry::Vector::Vector(double&, double&);*/
 /*%ignore Geometry::Vector::Vector(double&, double&, double&, double&);*/
 /*%include <Geometry/Vector.h>*/
+
 namespace Geometry
 {
    template <class ScalarParam,int dimensionParam>
@@ -51,14 +52,33 @@ namespace Geometry
       Vector(ScalarParam sX,ScalarParam sY,ScalarParam sZ);
 
       %extend {
-         double __getitem__(int index) 
+         double __getitem__(int index)
          {
             return $self->components[index];
          }
       }
    };
 }
-%template(Vectord) Geometry::Vector<double,3>;
+
+
+%template(Vector3) Geometry::Vector<double,3>;
+
+%typemap(in) const Geometry::Vector<double, 3>& {
+   PyObject* x = PyList_GetItem($input, 0);
+   PyObject* y = PyList_GetItem($input, 1);
+   PyObject* z = PyList_GetItem($input, 2);
+   double px = PyFloat_AsDouble(x);
+   double py = PyFloat_AsDouble(y);
+   double pz = PyFloat_AsDouble(z);
+   Geometry::Vector<double, 3>* v = new Geometry::Vector<double, 3>(px, py, pz);
+   $1 = v;
+}
+
+/* Free memory allocated in list -> Vrui::Point typemap */
+%typemap(free) const Geometry::Vector<double, 3>& {
+   delete $1;
+}
+
 
 
 /*%rename(VruiGeoid) Geometry::Geoid;*/
@@ -66,6 +86,9 @@ namespace Geometry
 
 %template(Geoidd) Geometry::Geoid<double>;
 
+%pythoncode {
+   Geoid = Geoidd
+}
 /*%include <Geometry/OrthogonalTransformation.h>*/
 
 namespace Geometry

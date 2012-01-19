@@ -6,7 +6,7 @@ import numpy
 
 def drawEarth(numStrips, numQuads, scaleFactor, dataItem):
 
-   wgs84 = pyvrui.Geoidd()
+   wgs84 = pyvrui.Geoid()
 
    vertices = numpy.zeros(((numStrips+1)*(numQuads+1)*8), dtype=numpy.float32)
    indices =  numpy.zeros((numStrips*(numQuads+1)*2), dtype=numpy.uint16)
@@ -81,7 +81,7 @@ def drawEarth(numStrips, numQuads, scaleFactor, dataItem):
 
 def drawGrid(numStrips, numQuads, overSample, scaleFactor):
 
-   wgs84 = pyvrui.Geoidd()
+   wgs84 = pyvrui.Geoid()
 
    # Draw parallels
    for i in range(numStrips-1):
