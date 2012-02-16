@@ -6,30 +6,13 @@ project(pyvrui)
 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-#list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
-
 find_package(SWIG REQUIRED)
 include(${SWIG_USE_FILE})
 
-#find_package(Vrui REQUIRED)
 find_package(PkgConfig)
-pkg_check_modules(PC_VRUI Vrui)
-set(VRUI_DEFINITIONS ${PC_VRUI_CFLAGS_OTHER})
 
-find_path(VRUI_INCLUDE_DIR Vrui/Application.h
-   HINTS ${PC_VRUI_INCLUDEDIR} ${PC_VRUI_INCLUD_DIRS})
-
-find_library(VRUI_LIBRARY NAMES Vrui.g++-3
-   HINTS ${PC_VRUI_LIBDIR} ${PC_VRUI_LIBRARY_DIRS})
-
-set(VRUI_LIBRARIES ${VRUI_LIBRARY})
-set(VRUI_INCLUDE_DIRS ${VRUI_INCLUDE_DIR})
-
-include(FindPackageHandleStandardArgs)
-
-find_package_handle_standard_args(Vrui DEFUALT_MSG
-                                  VRUI_LIBRARY
-                                  VRUI_INCLUDE_DIR)
+pkg_search_module(VRUI REQUIRED Vrui)
+add_definitions(${VRUI_CFLAGS})
 
 find_package(PythonLibs)
 
@@ -43,9 +26,12 @@ file(GLOB INTERFACE_FILES *.i)
 set_source_files_properties(${INTERFACE_FILES} PROPERTIES CPLUSPLUS ON)
 
 message(STATUS "VRUI_LIBRARIES=${VRUI_LIBRARIES}")
+message(STATUS "VRUI_LDFLAGS=${VRUI_LDFLAGS}")
+
+string(REPLACE "-framework;" "-framework" VRUI_LDFLAGS "${VRUI_LDFLAGS}")
 
 swig_add_module(${PROJECT_NAME} python ${PROJECT_NAME}.i)
-swig_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES} ${VRUI_LIBRARIES})
+swig_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARIES} ${VRUI_LDFLAGS})
 
 set(CMAKE_INSTALL_PREFIX "/usr/local")
 
