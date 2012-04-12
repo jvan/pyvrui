@@ -157,6 +157,7 @@ namespace GLMotif {
 %include <GLMotif/Popup.h>
 %include <GLMotif/Blind.h>
 %include <GLMotif/Label.h>
+/*%include <GLMotif/Slider.h>*/
 
 namespace GLMotif {
 
@@ -203,14 +204,24 @@ class CascadeButton : public DecoratedButton
 
 class DragWidget : public Widget { };
 
+class Slider : public DragWidget {
+
+   public:
+      Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sShaftLength, bool sManageChild =true);
+
+};
+
 }
+
 
 %include <GLMotif/Menu.h>
 %include <GLMotif/PopupMenu.h>
 %include <GLMotif/PopupWindow.h>
 
-%ignore GLMotif::Slider::Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sSliderWidth,GLfloat sShaftLength,bool sManageChild =true);
-%include <GLMotif/Slider.h>
+/*%ignore GLMotif::Slider::Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sSliderWidth,GLfloat sShaftLength,bool sManageChild =true);*/
+/*%include <GLMotif/Slider.h>*/
+
+
 
 %pythoncode %{
 
