@@ -48,6 +48,7 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
    {
       PyObject* func;
       swig_type_info* type_info;
+      PyObject* additional_data;
    };
 
    /* I think it's safe to say that I am not 100% pleased with this solution. */
@@ -98,13 +99,23 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
       }
       
       /* Create the arguments list */
-      PyObject* arglist = Py_BuildValue("(O)", obj);
+      PyObject* arglist; /* = Py_BuildValue("(O)", obj);*/
+
+      /*char* data = PyString_AsString(type_data->additional_data);*/
+      if (type_data->additional_data != NULL)
+      {
+         arglist = Py_BuildValue("(OO)", obj, type_data->additional_data);
+      }
+      else
+      {
+         arglist = Py_BuildValue("(O)", obj);
+      }
+
       if (arglist == NULL)
       {
          printf("add_PythonCallback: Error building arglist\n");
          return;
       }
-
       /* Call the python method with the converted callback data */
       PyObject* result = PyEval_CallObject(type_data->func, arglist);
       if (result == NULL)
@@ -138,7 +149,7 @@ class CallbackList
       /* Add a method which takes a python method. This is method that
          will actually be called. */
       %extend {
-         void python_add(PyObject* PyFunc)
+         void python_add(PyObject* PyFunc, PyObject* data=NULL)
          {
             Py_XINCREF(PyFunc);
 
@@ -148,6 +159,7 @@ class CallbackList
             CallbackTypeData* type_data = new CallbackTypeData;
             type_data->func = PyFunc;
             type_data->type_info = SWIG_TypeQueryModule(&swig_module, &swig_module, callbackClassName);
+            type_data->additional_data = data;
 
             /* Call the original add method. With the re-routing function
                defined above. */
@@ -170,8 +182,8 @@ class Callback:
       print 'Callback.cb={0}'.format(cb)
 
    def __call__(self, f):
-      def wrapper(self, data):
-         return f(self, data)
+      def wrapper(self, *args):
+         return f(self, *args)
       wrapper.__cbclass__ = self.cbclass + 'CallbackData *'
       return wrapper
 
