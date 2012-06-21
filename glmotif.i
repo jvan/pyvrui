@@ -139,7 +139,8 @@ namespace GLMotif {
          virtual void setBackgroundColor(const Color& newBackgroundColor);
          virtual void setForegroundColor(const Color& newForegroundColor);
 
-         const char* getName(void) const;
+         std::string getName(void) const;
+
    };
 
    class Container : public Widget
