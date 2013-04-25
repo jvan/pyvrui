@@ -1,8 +1,3 @@
-//------------------------------------------------------------------------------
-// SWIG interface file for pyvrui project.
-//
-//------------------------------------------------------------------------------
-
 %module(directors="1") pyvrui
 
 %feature("director:except") {
@@ -16,16 +11,12 @@
    catch (Swig::DirectorException& e) { SWIG_fail; }
 }
 
-/* Enable directors for all exposed classes */
-/*%feature("director");*/
-
-/* Include global typemaps */
 %include "typemaps.i"
+%include "macros.i"
 
-/* Include interface modules */
-%include "geometry.i"
-%include "misc.i"
-%include "plugins.i"
-%include "vrui.i"
 %include "gl.i"
+%include "misc.i"
+%include "geometry.i"
+%include "plugins.i"
 %include "glmotif.i"
+%include "vrui.i"

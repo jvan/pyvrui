@@ -7,19 +7,20 @@ import numpy
 def drawEarth(numStrips, numQuads, scaleFactor, dataItem):
 
    wgs84 = pyvrui.Geoid()
-
+   wgs84E2 = (2.0-wgs84.getFlatteningFactor())*wgs84.getFlatteningFactor()
+ 
    vertices = numpy.zeros(((numStrips+1)*(numQuads+1)*8), dtype=numpy.float32)
    indices =  numpy.zeros((numStrips*(numQuads+1)*2), dtype=numpy.uint16)
-   
+
    index = 0
    for i in range(numStrips+1):
       texY = float(i)/numStrips
       lat = (float(i)/numStrips-0.5)*math.pi
       s = math.sin(lat)
       c = math.cos(lat)
-      chi = math.sqrt(1.0-wgs84.e2*s*s)
-      xy = wgs84.radius/chi*c*scaleFactor
-      z = wgs84.radius*(1.0-wgs84.e2)/chi*s*scaleFactor
+      chi = math.sqrt(1.0-wgs84E2*s*s)
+      xy = wgs84.getRadius()/chi*c*scaleFactor
+      z = wgs84.getRadius()*(1.0-wgs84E2)/chi*s*scaleFactor
       
       for j in range(numQuads+1):
          texX = float(j)/numQuads+0.5
@@ -82,6 +83,7 @@ def drawEarth(numStrips, numQuads, scaleFactor, dataItem):
 def drawGrid(numStrips, numQuads, overSample, scaleFactor):
 
    wgs84 = pyvrui.Geoid()
+   wgs84E2 = (2.0-wgs84.getFlatteningFactor())*wgs84.getFlatteningFactor()
 
    # Draw parallels
    for i in range(numStrips-1):
@@ -89,9 +91,9 @@ def drawGrid(numStrips, numQuads, overSample, scaleFactor):
 
       s = math.sin(lat)
       c = math.cos(lat)
-      chi = math.sqrt(1.0-wgs84.e2*s*s)
-      xy = wgs84.radius/chi*c*scaleFactor
-      z = wgs84.radius*(1.0-wgs84.e2)/chi*s*scaleFactor
+      chi = math.sqrt(1.0-wgs84E2*s*s)
+      xy = wgs84.getRadius()/chi*c*scaleFactor
+      z = wgs84.getRadius()*(1.0-wgs84E2)/chi*s*scaleFactor
       
       glBegin(GL_LINE_LOOP)
       for j in range(numQuads*overSample):
@@ -108,14 +110,14 @@ def drawGrid(numStrips, numQuads, overSample, scaleFactor):
       sl = math.sin(lng)
 
       glBegin(GL_LINE_STRIP)
-      glVertex(0.0, 0.0, -wgs84.b*scaleFactor)
+      glVertex(0.0,0.0,-wgs84.getRadius()*(1.0-wgs84.getFlatteningFactor())*scaleFactor)
       for j in range(numStrips*overSample-1):
          lat = (math.pi*j)/(numStrips*overSample)-0.5*math.pi;
          s = math.sin(lat)
          c = math.cos(lat)
-         chi = math.sqrt(1.0-wgs84.e2*s*s)
-         xy = wgs84.radius/chi*c*scaleFactor
-         z = wgs84.radius*(1.0-wgs84.e2)/chi*s*scaleFactor
+         chi = math.sqrt(1.0-wgs84E2*s*s)
+         xy = wgs84.getRadius()/chi*c*scaleFactor
+         z = wgs84.getRadius()*(1.0-wgs84E2)/chi*s*scaleFactor
          glVertex(xy*cl,xy*sl,z)
-      glVertex(0.0,0.0,wgs84.b*scaleFactor)
+      glVertex(0.0,0.0,wgs84.getRadius()*(1.0-wgs84.getFlatteningFactor())*scaleFactor)
       glEnd()

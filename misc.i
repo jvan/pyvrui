@@ -1,9 +1,3 @@
-/******************************************************************************/
-/* Interface file for the Misc directory.                                     */
-/*                                                                            */
-/******************************************************************************/
-
-/* Includes for generated wrapper code */
 %{
    #include <Misc/CallbackData.h>
    #include <GLMotif/Button.h>
@@ -16,10 +10,6 @@
 
 %feature("director") Misc::CallbackData;
 %feature("director") Misc::CallbackList;
-
-
-/* Interface */
-
 %include <Misc/CallbackData.h>
 
 %inline %{
@@ -40,7 +30,6 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
 
 %}
 
-
 /* Insert wrapper code for re-routing python callbacks */
 %{
 
@@ -55,6 +44,7 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
    PyObject* shenanigans(Misc::CallbackData* cbData, CallbackTypeData* typeData)
    {
       PyObject* obj = NULL;
+
       if (strcmp(typeData->type_info->str, "ToolManagerToolCreationCallbackData *") == 0)
       {
          /* Cast the callback data to ToolCreationCallbakData type */
@@ -80,7 +70,8 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
       {
          /* Tool desctruction  */
       }
-      else { }
+      else {
+      }
 
       return obj; 
    }
@@ -158,7 +149,9 @@ class CallbackList
             
             CallbackTypeData* type_data = new CallbackTypeData;
             type_data->func = PyFunc;
-            type_data->type_info = SWIG_TypeQueryModule(&swig_module, &swig_module, callbackClassName);
+            swig_module_info* swig_module = SWIG_Python_GetModule(0);
+            type_data->type_info = SWIG_TypeQueryModule(swig_module, swig_module, callbackClassName);
+
             type_data->additional_data = data;
 
             /* Call the original add method. With the re-routing function
@@ -170,16 +163,17 @@ class CallbackList
 
 }
 
+
 /* Rename the python callback so that the re-routing mechanism is 
    transparent to the user. */
 %pythoncode %{
+
 CallbackList.add = CallbackList.python_add
    
 class Callback:
 
    def __init__(self, cb):
       self.cbclass = cb
-      print 'Callback.cb={0}'.format(cb)
 
    def __call__(self, f):
       def wrapper(self, *args):
@@ -188,3 +182,4 @@ class Callback:
       return wrapper
 
 %}
+

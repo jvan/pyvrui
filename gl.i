@@ -1,63 +1,46 @@
-//------------------------------------------------------------------------------
-// Interface file for the GL directory.
-//
-//------------------------------------------------------------------------------
-
-/* Includes for generated wrapper code */
 %{
    #include <GL/GLObject.h>
    #include <GL/GLContextData.h>
    #include <GL/GLModels.h>
 %}
 
-%feature("director") GLObject;
+/***********************************************************
+ * DataItem Class Interface
+ *
+ **********************************************************/
 %feature("director") DataItem;
-
-/* Nested classes and structures */
 
 struct DataItem
 {
-   virtual ~NestedDataItem(void) { }
+   virtual ~DataItem(void) { }
 };
 
-%nestedworkround GLObject::DataItem;
+/***********************************************************
+ * GL::GLObject Class Interface
+ *
+ **********************************************************/
+NESTED_WORKAROUND_HELPER(GLObject, DataItem);
 
-%{
-   typedef GLObject::DataItem DataItem;
-%}
-
-/* Interface */
- 
-%include <GL/GLModels.h>
-
-class GLObject
-{
-   public:
-   GLObject(void);
-   virtual ~GLObject(void);
-
-   virtual void initContext(GLContextData& contextData) const = 0;
-};
+%feature("director") GLObject;
+%include <GL/GLObject.h>
 
 /* Automatically disable garbage collection on DataItem objects */
 %pythonprepend GLContextData::addDataItem(const GLObject* thing, GLObject::DataItem* dataItem) %{
    args[1].__disown__()
 %}
 
-class GLContextData
-{
-   public:
-   GLContextData(int sTableSize,float sWaterMark =0.9f,float sGrowRate =1.7312543);
-   ~GLContextData(void);
+%import <GL/TLSHelper.h>
 
-   bool isRealized(const GLObject* thing) const;
-   void addDataItem(const GLObject* thing, GLObject::DataItem* dataItem);
-   template <class DataItemParam>
-   DataItemParam* retrieveDataItem(const GLObject* thing);
-   void removeDataItem(const GLObject* thing);
-};
+/***********************************************************
+ * GL::GLContextData Class Interface
+ *
+ **********************************************************/
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLContextData::CurrentContextDataChangedCallbackData;
+%include <GL/GLContextData.h>
 
 %extend GLContextData {
    %template(retrieveDataItem) retrieveDataItem<DataItem>;
 };
 
+
+%include <GL/GLModels.h>

@@ -1,4 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
+#
+# Basic VRUI application.
+#
+# This is a simple VRUI application which demonstrates basic VRUI
+# functionality.
+#
 
 import sys
 try:
@@ -9,16 +15,17 @@ except ImportError:
 
 from OpenGL.GL import *
 
-
 class Demo(pyvrui.Application, pyvrui.GLObject):
 
    class DataItem(pyvrui.DataItem):
       def __init__(self):
          pyvrui.DataItem.__init__(self)
-         self.displayListId = glGenLists(1)
+
+         self.displayList = glGenLists(1)
 
       def __del__(self):
-         glDeleteLists(self.displayListId, 1)
+         glDeleteLists(self.displayList, 1)
+
 
    def __init__(self):
       pyvrui.Application.__init__(self, sys.argv)
@@ -26,22 +33,20 @@ class Demo(pyvrui.Application, pyvrui.GLObject):
 
       self.modelAngles    = [0.0,   0.0,  0.0]
       self.rotationSpeeds = [9.0, -31.0, 19.0]
-   
+
       self.rotating = True
 
       mainMenu = self.createMainMenu()
       pyvrui.setMainMenu(mainMenu)
 
-      self.resetNavigationCallback(None)
-      
    def initContext(self, contextData):
       dataItem = Demo.DataItem()
-
       contextData.addDataItem(self, dataItem)
 
-      glNewList(dataItem.displayListId, GL_COMPILE)
+      glNewList(dataItem.displayList, GL_COMPILE)
 
       glPushAttrib(GL_LIGHTING_BIT)
+
       glDisable(GL_LIGHTING)
       glLineWidth(3.0)
       glColor(1.0,1.0,1.0)
@@ -74,20 +79,10 @@ class Demo(pyvrui.Application, pyvrui.GLObject):
       glVertex(-5.0, 5.0,-5.0)
       glVertex(-5.0, 5.0, 5.0)
       glEnd()
-
+      
       glPopAttrib()
-   
+
       glEndList()
-
-   def frame(self):
-      if not self.rotating:
-         return
-
-      frameTime = pyvrui.getCurrentFrameTime()
-      for i in range(3):
-         self.modelAngles[i] += self.rotationSpeeds[i]*frameTime
-         self.modelAngles[i]  = self.modelAngles[i] % 360.0
-      pyvrui.requestUpdate()
 
    def display(self, contextData):
       dataItem = contextData.retrieveDataItem(self)
@@ -97,10 +92,21 @@ class Demo(pyvrui.Application, pyvrui.GLObject):
       glRotatef(self.modelAngles[0], 1.0, 0.0, 0.0)
       glRotatef(self.modelAngles[1], 0.0, 1.0, 0.0)
       glRotatef(self.modelAngles[2], 0.0, 0.0, 1.0)
-      
-      glCallList(dataItem.displayListId)
+
+      glCallList(dataItem.displayList)
 
       glPopMatrix()
+
+   def frame(self):
+      if not self.rotating:
+         return
+
+      frameTime = pyvrui.getCurrentFrameTime()
+      for i in range(3):
+         self.modelAngles[i] += self.rotationSpeeds[i]*frameTime
+         self.modelAngles[i]  = self.modelAngles[i] % 360.0
+
+      pyvrui.requestUpdate()
 
    def toolCreationCallback(self,cbdata): pass
    def toolDestructionCallback(self,cbdata): pass

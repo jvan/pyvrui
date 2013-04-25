@@ -1,84 +1,120 @@
-/******************************************************************************/
-/* Interface file for the GLMotif directory.                                  */
-/*                                                                            */
-/******************************************************************************/
-
-/* Includes for generated wrapper code */
 %{
-   #include <VruiSupport/GLMotif/GLMotif>
-%}
+   #include <GLMotif/Widget.h>
+   #include <GLMotif/WidgetManager.h>
+   #include <GLMotif/Container.h>
+   #include <GLMotif/StyleSheet.h>
+   #include <GLMotif/Label.h>
 
+   #include <GLMotif/DragWidget.h>
+   #include <GLMotif/CascadeButton.h>
+   #include <GLMotif/Blind.h>
+
+   #include <GLMotif/Popup.h>
+   #include <GLMotif/PopupWindow.h>
+   #include <GLMotif/Menu.h>
+   #include <GLMotif/SubMenu.h>
+   #include <GLMotif/PopupMenu.h>
+   #include <GLMotif/Button.h>
+   #include <GLMotif/Slider.h>
+
+   #include <GLMotif/Types.h>
+   #include <GLMotif/RowColumn.h>
+%}
 
 %import <GLMotif/Types.h>
 %import <GLMotif/Alignment.h>
 
-%feature("director") GLMotif::Widget;
-
-/* Disable nested class warning messages */
-%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::ArmCallbackData;
-%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::SelectCallbackData;
-%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::CallbackData;
-%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::EntrySelectCallbackData;
-
+/***********************************************************
+ * GLMotif::WidgetManager Class Interface
+ *
+ **********************************************************/
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::WidgetPopCallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::WidgetMoveCallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::PoppedWidgetIterator;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::EventProcessingLocker;
+%include <GLMotif/WidgetManager.h>
+
+/***********************************************************
+ * GLMotif::StyleSheet Class Interface
+ *
+ **********************************************************/
+%include <GLMotif/StyleSheet.h>
+
+/***********************************************************
+ * GLMotif::Widget Class Interface
+ *
+ **********************************************************/
+%feature("director") GLMotif::Widget;
+%feature("nodirector") GLMotif::Widget::getManager;
+%include <GLMotif/Widget.h>
+
+/***********************************************************
+ * GLMotif::Blind Class Interface
+ *
+ **********************************************************/
+DISABLE_GARBAGE_COLLECTION(GLMotif, Blind);
+%include <GLMotif/Blind.h>
+
+/***********************************************************
+ * GLMotif::Container Class Interface
+ * GLMotif::RowColumn Class Interface
+ *
+ **********************************************************/
+DISABLE_GARBAGE_COLLECTION(GLMotif, RowColumn);
+%include <GLMotif/Container.h>
+%include <GLMotif/RowColumn.h>
+
+/***********************************************************
+ * GLMotif::Popup Class Interface
+ * GLMotif::PopupMenu Class Interface
+ * GLMotif::Label Class Interface
+ *
+ **********************************************************/
+DISABLE_GARBAGE_COLLECTION(GLMotif, Popup);
+DISABLE_GARBAGE_COLLECTION(GLMotif, PopupWindow);
+DISABLE_GARBAGE_COLLECTION(GLMotif, PopupMenu);
+DISABLE_GARBAGE_COLLECTION(GLMotif, Label);
 
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::PopupWindow::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::PopupWindow::CloseCallbackData;
 
+%include <GLMotif/Popup.h>
+%include <GLMotif/PopupMenu.h>
+%include <GLMotif/PopupWindow.h>
+%include <GLMotif/Label.h>
 
-/* GLMotif objects are managed by their parent container objects. 
-   Therefore the thisown property on each class should be automatically
-   set to False when constructed. */
-%pythonappend GLMotif::Button::Button %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::ToggleButton::ToggleButton %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::CascadeButton::CascadeButton %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::Slider::Slider %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::Popup::Popup %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::PopupMenu::PopupMenu %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::PopupWindow::PopupWindow %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::RowColumn::RowColumn %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::Blind::Blind %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::Label::Label %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::Menu::Menu %{
-   self.thisown = False
-%}
-%pythonappend GLMotif::SubMenu::SubMenu %{
-   self.thisown = False
-%}
-
-
-/* Nested classes and structures */
+/***********************************************************
+ * GLMotif::Button Class Interface
+ *
+ **********************************************************/
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::ArmCallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::SelectCallbackData;
+NESTED_CALLBACK_DATA_HELPER(GLMotif, Button, CallbackData);
+DISABLE_GARBAGE_COLLECTION(GLMotif, Button);
+%include <GLMotif/Button.h>
 
 class ButtonCallbackData : public Misc::CallbackData
 {
    public:
    GLMotif::Button* button;
-   ButtonCallbackData(GLMotif::Button* sButton); /* : button(sButton) { }*/
+   ButtonCallbackData(GLMotif::Button* sButton); 
 };
+
+/***********************************************************
+ * GLMotif::DecoratedButton Class Interface
+ *
+ **********************************************************/
+%ignore GLMotif::DecoratedButton::setDecorationPosition;
+%include <GLMotif/DecoratedButton.h>
+
+/***********************************************************
+ * GLMotif::ToggleButton Class Interface
+ *
+ **********************************************************/
+NESTED_CALLBACK_DATA_HELPER(GLMotif, ToggleButton, ValueChangedCallbackData);
+DISABLE_GARBAGE_COLLECTION(GLMotif, ToggleButton);
+%include <GLMotif/ToggleButton.h>
 
 class ToggleButtonValueChangedCallbackData : public Misc::CallbackData
 {
@@ -89,13 +125,33 @@ class ToggleButtonValueChangedCallbackData : public Misc::CallbackData
       ToggleButtonValueChangedCallbackData(GLMotif::ToggleButton* sToggle, bool sSet);
 };
 
-class SliderValueChangedCallbackData : public Misc::CallbackData
+/***********************************************************
+ * GLMotif::CascadeButton Class Interface
+ *
+ **********************************************************/
+DISABLE_GARBAGE_COLLECTION(GLMotif, CascadeButton);
+%include <GLMotif/CascadeButton.h>
+
+/***********************************************************
+ * GLMotif::Slider Class Interface
+ *
+ **********************************************************/
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::DragWidget::CallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::DragWidget::DraggingCallbackData;
+%include <GLMotif/DragWidget.h>
+
+NESTED_CALLBACK_DATA_HELPER(GLMotif, Slider, ValueChangedCallbackData);
+DISABLE_GARBAGE_COLLECTION(GLMotif, Slider);
+%ignore GLMotif::Slider::Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sSliderWidth,GLfloat sShaftLength,bool sManageChild =true);
+%include <GLMotif/Slider.h>
+
+class SliderValueChangedCallbackData:public Misc::CallbackData
 {
    public:
-      enum ChangeReason 
-      {
+      enum ChangeReason
+         {
          CLICKED,DRAGGED
-      };
+         };
 
       GLMotif::Slider* slider;
       ChangeReason reason;
@@ -103,126 +159,26 @@ class SliderValueChangedCallbackData : public Misc::CallbackData
 
       SliderValueChangedCallbackData(GLMotif::Slider* sSlider,ChangeReason sReason,GLfloat sValue);
 };
-
-
-%nestedworkaround GLMotif::Button::CallbackData;
-%nestedworkaround GLMotif::ToggleButton::ValueChangedCallbackData;
-%nestedworkaround GLMotif::Slider::ValueChangedCallbackData;
-
-%{
-   typedef GLMotif::Button::CallbackData ButtonCallbackData;
-   typedef GLMotif::ToggleButton::ValueChangedCallbackData ToggleButtonValueChangedCallbackData;
-   typedef GLMotif::Slider::ValueChangedCallbackData SliderValueChangedCallbackData;
-%}
-
-/* Interface */
-
-namespace GLMotif {
-
-   class Container;
    
-   class Widget
-   {
-      public:
-         enum BorderType
-         {
-            PLAIN,RAISED,LOWERED
-         };
-         Widget(const char* sName, Container* sParent, bool sManageChild=true);
-         virtual ~Widget(void);
-         void manageChild();
-         virtual Vector calcNaturalSize(void) const=0;
 
-         virtual void setBorderWidth(GLfloat newBorderWidth);
-         virtual void setBorderType(BorderType newBorderType);
-         virtual void setBorderColor(const Color& newBorderColor);
-         virtual void setBackgroundColor(const Color& newBackgroundColor);
-         virtual void setForegroundColor(const Color& newForegroundColor);
-
-         std::string getName(void) const;
-
-   };
-
-   class Container : public Widget
-   {
-      public:
-         Container(const char* sName,Container* sParent,bool manageChild=true);
-         virtual void addChild(Widget* newChild) =0;
-   };
-
-}
-
-%include <GLMotif/WidgetManager.h>
-%include <GLMotif/StyleSheet.h>
-%include <GLMotif/RowColumn.h>
-%include <GLMotif/Popup.h>
-%include <GLMotif/Blind.h>
-%include <GLMotif/Label.h>
-/*%include <GLMotif/Slider.h>*/
-
-namespace GLMotif {
-
-class SubMenu : public RowColumn
-{
-   public:
-      SubMenu(const char* sName,Container* sParent,bool manageChild =true);
-};
-
-class Button : public Label
-{
-   public:
-      Button(const char* sName,Container* sParent,const char* sLabel,bool manageChild=true);
-
-      GLfloat getMarginWidth(void) const;
-      void setMarginWidth(GLfloat newMarginWidth);
-      void setHAlignment(GLFont::HAlignment newHAlignment);
-      void setVAlignment(GLFont::VAlignment newVAlignment);
-      /*const char* getLabel(void) const;*/
-      /*virtual void setLabel(const char* newLabel); */
-
-      Misc::CallbackList& getSelectCallbacks(void); 
-};
-
-class DecoratedButton : public Button { };
-
-class ToggleButton : public DecoratedButton
-{
-   public:
-      ToggleButton(const char* sName,Container* sParent,const char* sLabel,bool manageChild =true);
-      Misc::CallbackList& getValueChangedCallbacks(void);
-
-      void setToggle(bool newSet);
-      bool getToggle() const;
-};
-
-class CascadeButton : public DecoratedButton
-{
-   public:
-      CascadeButton(const char* sName,Container* sParent,const char* sLabel,bool manageChild =true);
-
-      void setPopup(Popup* newPopup);
-};
-
-class DragWidget : public Widget { };
-
-class Slider : public DragWidget {
-
-   public:
-      Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sShaftLength, bool sManageChild =true);
-
-};
-
-}
-
-
+/***********************************************************
+ * GLMotif::Menu Class Interface
+ *
+ **********************************************************/
+DISABLE_GARBAGE_COLLECTION(GLMotif, Menu);
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::CallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::EntrySelectCallbackData;
+%ignore GLMotif::Menu::Menu(char const *,GLMotif::Container *,bool);
 %include <GLMotif/Menu.h>
-%include <GLMotif/PopupMenu.h>
-%include <GLMotif/PopupWindow.h>
 
-/*%ignore GLMotif::Slider::Slider(const char* sName,Container* sParent,Orientation sOrientation,GLfloat sSliderWidth,GLfloat sShaftLength,bool sManageChild =true);*/
-/*%include <GLMotif/Slider.h>*/
-
-
+/***********************************************************
+ * GLMotif::SubMenu Class Interface
+ *
+ **********************************************************/
+DISABLE_GARBAGE_COLLECTION(GLMotif, SubMenu);
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::SubMenu::CallbackData;
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::SubMenu::EntrySelectCallbackData;
+%include <GLMotif/SubMenu.h>
 
 %pythoncode %{
 
@@ -231,3 +187,4 @@ ToggleButton.ValueChangedCallback = Callback('ToggleButtonValueChanged')
 Slider.ValueChangedCallback = Callback('SliderValueChanged')
 
 %}
+

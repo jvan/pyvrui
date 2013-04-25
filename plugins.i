@@ -2,6 +2,7 @@
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Plugins::FactoryManager::DsoError;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Plugins::FactoryManager::FactoryIterator;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) Plugins::FactoryManager::ConstFactoryIterator;
-%include <Plugins/FactoryManager.h>
+%ignore Plugins::FactoryManager::addClass;
 %include <Plugins/Factory.h>
+%include <Plugins/FactoryManager.h>
 

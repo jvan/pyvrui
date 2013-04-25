@@ -1,55 +1,44 @@
-%typemap(in) char** {
-   /* Check if input is a list */
-   if (PyList_Check($input)) {
-      int size = PyList_Size($input);
-      int i = 0;
-      $1 = (char**)malloc((size+1)*sizeof(char*));
-      for (i=0; i<size; i++) {
-         PyObject* o = PyList_GetItem($input, i);
-         if (PyString_Check(o)) {
-            $1[i] = PyString_AsString(PyList_GetItem($input, i));
-         } else {
-            PyErr_SetString(PyExc_TypeError, "List must contain strings");
-            free($1);
-            return NULL;
-         }
-      }
-      $1[i] = 0;
-   } else {
-      PyErr_SetString(PyExc_TypeError, "not a list");
-      return NULL;
-   }
-}
-
-%typemap(freearg) char** {
-   free((char*) $1);
-}
-
-%typemap(in) (int argc, char** argv) {
+/* Use a python list as input to Vrui::Application constructor */
+%typemap(in) (int& argc, char**& argv) {
    /* Check if input is a list */
    if (PyList_Check($input)) {
       int i;
-      $1 = PyList_Size($input);
-      $2 = (char**)malloc(($1+1)*sizeof(char*));
-      for (i=0; i<$1; i++) {
+      int num_args = (int)PyList_Size($input);
+      char** args = (char**)malloc((num_args+1)*sizeof(char*));
+      for (i=0; i<num_args; i++) {
          PyObject* o = PyList_GetItem($input, i);
          if (PyString_Check(o)) {
-            $2[i] = PyString_AsString(PyList_GetItem($input, i));
+            args[i] = PyString_AsString(PyList_GetItem($input, i));
          } else {
             PyErr_SetString(PyExc_TypeError, "list must contain strings");
-            free($2);
+            free(args);
             return NULL;
          }
       }
-      $2[i] = 0;
+      args[i] = 0;
+      $1 = &num_args;
+      $2 = &args;
+      free(args);
    } else {
       PyErr_SetString(PyExc_TypeError, "not a list");
       return NULL;
    }
 }
 
-%typemap(freearg) (int argc, char** argv) {
-   free((char*) $2);
+/* Convert python list to Vrui::Point */
+%typemap(in) const Vrui::Point& {
+   PyObject* x = PyList_GetItem($input, 0);
+   PyObject* y = PyList_GetItem($input, 1);
+   PyObject* z = PyList_GetItem($input, 2);
+   double px = PyFloat_AsDouble(x);
+   double py = PyFloat_AsDouble(y);
+   double pz = PyFloat_AsDouble(z);
+   $1 = new Vrui::Point(px, py, pz);
+}
+
+/* Free memory allocated in list -> Vrui::Point conversion */
+%typemap(free) const Vrui::Point& {
+   delete $1;
 }
 
 %typemap(in) GLfloat {
@@ -66,6 +55,4 @@
    $1 = PyLong_AsLong($input);
 }
 
-%typemap(out) std::string {
-   $result = PyString_FromString($1.c_str());
-}
+

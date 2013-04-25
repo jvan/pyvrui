@@ -1,6 +1,13 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python2.7
+#
+# Empty VRUI application.
+#
+# This program does nothing except initialize and run a VRUI application
+# object. It is used to verify that the VRUI environment is working
+# properly (menus are present, tools can be created/destroyed, etc).
+#
 import sys
+
 try:
    import pyvrui
 except ImportError:
