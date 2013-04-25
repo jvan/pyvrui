@@ -1,4 +1,9 @@
-build/
-
+*~
 *.swp
 *.pyc
+
+build/
+tools/
+
+pyvrui.py
+pyvrui_wrap.*
