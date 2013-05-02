@@ -24,10 +24,15 @@
 %import <GLMotif/Types.h>
 %import <GLMotif/Alignment.h>
 
-/***********************************************************
- * GLMotif::WidgetManager Class Interface
- *
- **********************************************************/
+//------------------------------------------------------------------------------
+// DataItem Class Interface
+//
+//------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------
+// GLMotif::WidgetManager Class Interface
+//
+//------------------------------------------------------------------------------
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::WidgetPopCallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::WidgetMoveCallbackData;
@@ -35,42 +40,47 @@
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::WidgetManager::EventProcessingLocker;
 %include <GLMotif/WidgetManager.h>
 
-/***********************************************************
- * GLMotif::StyleSheet Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::StyleSheet Class Interface
+//
+//------------------------------------------------------------------------------
 %include <GLMotif/StyleSheet.h>
 
-/***********************************************************
- * GLMotif::Widget Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::Widget Class Interface
+//
+//------------------------------------------------------------------------------
 %feature("director") GLMotif::Widget;
 %feature("nodirector") GLMotif::Widget::getManager;
 %include <GLMotif/Widget.h>
 
-/***********************************************************
- * GLMotif::Blind Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::Blind Class Interface
+// 
+//------------------------------------------------------------------------------
 DISABLE_GARBAGE_COLLECTION(GLMotif, Blind);
 %include <GLMotif/Blind.h>
 
-/***********************************************************
- * GLMotif::Container Class Interface
- * GLMotif::RowColumn Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::Container Class Interface
+// GLMotif::RowColumn Class Interface
+// 
+//------------------------------------------------------------------------------
 DISABLE_GARBAGE_COLLECTION(GLMotif, RowColumn);
 %include <GLMotif/Container.h>
 %include <GLMotif/RowColumn.h>
 
-/***********************************************************
- * GLMotif::Popup Class Interface
- * GLMotif::PopupMenu Class Interface
- * GLMotif::Label Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::Popup Class Interface
+// GLMotif::PopupMenu Class Interface
+// GLMotif::Label Class Interface
+// 
+//------------------------------------------------------------------------------
 DISABLE_GARBAGE_COLLECTION(GLMotif, Popup);
 DISABLE_GARBAGE_COLLECTION(GLMotif, PopupWindow);
 DISABLE_GARBAGE_COLLECTION(GLMotif, PopupMenu);
@@ -84,34 +94,37 @@ DISABLE_GARBAGE_COLLECTION(GLMotif, Label);
 %include <GLMotif/PopupWindow.h>
 %include <GLMotif/Label.h>
 
-/***********************************************************
- * GLMotif::Button Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::Button Class Interface
+// 
+//------------------------------------------------------------------------------
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::ArmCallbackData;
-%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::SelectCallbackData;
-NESTED_CALLBACK_DATA_HELPER(GLMotif, Button, CallbackData);
+%warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Button::CallbackData;
+NESTED_CALLBACK_DATA_HELPER(GLMotif, Button, SelectCallbackData);
 DISABLE_GARBAGE_COLLECTION(GLMotif, Button);
 %include <GLMotif/Button.h>
 
-class ButtonCallbackData : public Misc::CallbackData
+class ButtonSelectCallbackData : public Misc::CallbackData
 {
    public:
    GLMotif::Button* button;
-   ButtonCallbackData(GLMotif::Button* sButton); 
+   ButtonSelectCallbackData(GLMotif::Button* sButton); 
 };
 
-/***********************************************************
- * GLMotif::DecoratedButton Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::DecoratedButton Class Interface
+// 
+//------------------------------------------------------------------------------
 %ignore GLMotif::DecoratedButton::setDecorationPosition;
 %include <GLMotif/DecoratedButton.h>
 
-/***********************************************************
- * GLMotif::ToggleButton Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::ToggleButton Class Interface
+// 
+//------------------------------------------------------------------------------
 NESTED_CALLBACK_DATA_HELPER(GLMotif, ToggleButton, ValueChangedCallbackData);
 DISABLE_GARBAGE_COLLECTION(GLMotif, ToggleButton);
 %include <GLMotif/ToggleButton.h>
@@ -125,17 +138,19 @@ class ToggleButtonValueChangedCallbackData : public Misc::CallbackData
       ToggleButtonValueChangedCallbackData(GLMotif::ToggleButton* sToggle, bool sSet);
 };
 
-/***********************************************************
- * GLMotif::CascadeButton Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::CascadeButton Class Interface
+// 
+//------------------------------------------------------------------------------
 DISABLE_GARBAGE_COLLECTION(GLMotif, CascadeButton);
 %include <GLMotif/CascadeButton.h>
 
-/***********************************************************
- * GLMotif::Slider Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::Slider Class Interface
+// 
+//------------------------------------------------------------------------------
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::DragWidget::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::DragWidget::DraggingCallbackData;
 %include <GLMotif/DragWidget.h>
@@ -161,20 +176,21 @@ class SliderValueChangedCallbackData:public Misc::CallbackData
 };
    
 
-/***********************************************************
- * GLMotif::Menu Class Interface
- *
- **********************************************************/
+//------------------------------------------------------------------------------
+// GLMotif::Menu Class Interface
+// 
+//------------------------------------------------------------------------------
 DISABLE_GARBAGE_COLLECTION(GLMotif, Menu);
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::Menu::EntrySelectCallbackData;
 %ignore GLMotif::Menu::Menu(char const *,GLMotif::Container *,bool);
 %include <GLMotif/Menu.h>
 
-/***********************************************************
- * GLMotif::SubMenu Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GLMotif::SubMenu Class Interface
+// 
+//------------------------------------------------------------------------------
 DISABLE_GARBAGE_COLLECTION(GLMotif, SubMenu);
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::SubMenu::CallbackData;
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLMotif::SubMenu::EntrySelectCallbackData;
@@ -182,7 +198,7 @@ DISABLE_GARBAGE_COLLECTION(GLMotif, SubMenu);
 
 %pythoncode %{
 
-Button.SelectCallback = Callback('Button')
+Button.SelectCallback = Callback('ButtonSelect')
 ToggleButton.ValueChangedCallback = Callback('ToggleButtonValueChanged')
 Slider.ValueChangedCallback = Callback('SliderValueChanged')
 

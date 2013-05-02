@@ -4,10 +4,10 @@
    #include <GL/GLModels.h>
 %}
 
-/***********************************************************
- * DataItem Class Interface
- *
- **********************************************************/
+//------------------------------------------------------------------------------
+// DataItem Class Interface
+//
+//------------------------------------------------------------------------------
 %feature("director") DataItem;
 
 struct DataItem
@@ -15,10 +15,11 @@ struct DataItem
    virtual ~DataItem(void) { }
 };
 
-/***********************************************************
- * GL::GLObject Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GL::GLObject Class Interface
+//
+//------------------------------------------------------------------------------
 NESTED_WORKAROUND_HELPER(GLObject, DataItem);
 
 %feature("director") GLObject;
@@ -31,10 +32,11 @@ NESTED_WORKAROUND_HELPER(GLObject, DataItem);
 
 %import <GL/TLSHelper.h>
 
-/***********************************************************
- * GL::GLContextData Class Interface
- *
- **********************************************************/
+
+//------------------------------------------------------------------------------
+// GL::GLContextData Class Interface
+//
+//------------------------------------------------------------------------------
 %warnfilter(SWIGWARN_PARSE_NAMED_NESTED_CLASS) GLContextData::CurrentContextDataChangedCallbackData;
 %include <GL/GLContextData.h>
 
@@ -43,4 +45,9 @@ NESTED_WORKAROUND_HELPER(GLObject, DataItem);
 };
 
 
+//------------------------------------------------------------------------------
+// GL::GLModels Interface
+//
+//------------------------------------------------------------------------------
 %include <GL/GLModels.h>
+
