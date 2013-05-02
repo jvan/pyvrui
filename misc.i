@@ -1,5 +1,6 @@
 %{
    #include <Misc/CallbackData.h>
+   #include <Misc/CallbackList.h>
    #include <GLMotif/Button.h>
    #include <GLMotif/ToggleButton.h>
    #include <Vrui/ToolManager.h>
@@ -17,15 +18,15 @@
 class LocatorToolCreationCallbackData : public Misc::CallbackData
 {
    public:
-   Vrui::LocatorTool* tool;
-   LocatorToolCreationCallbackData(Vrui::LocatorTool* sTool) : tool(sTool) { }
+      Vrui::LocatorTool* tool;
+      LocatorToolCreationCallbackData(Vrui::LocatorTool* sTool) : tool(sTool)  { }
 };
 
 class DraggingToolCreationCallbackData : public Misc::CallbackData
 {
    public:
-   Vrui::DraggingTool* tool;
-   DraggingToolCreationCallbackData(Vrui::DraggingTool* sTool) : tool(sTool) { }
+      Vrui::DraggingTool* tool;
+      DraggingToolCreationCallbackData(Vrui::DraggingTool* sTool) : tool(sTool) { }
 };
 
 %}
@@ -45,6 +46,7 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
    {
       PyObject* obj = NULL;
 
+
       if (strcmp(typeData->type_info->str, "ToolManagerToolCreationCallbackData *") == 0)
       {
          /* Cast the callback data to ToolCreationCallbakData type */
@@ -52,13 +54,14 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
          
          /* Determine the type of tool being created */
          std::string toolName(typeid(*(data->tool)).name());
-         if (toolName.find("LocatorTool") != -1)
+
+         if (toolName.find("LocatorTool") != std::string::npos)
          {
             LocatorToolCreationCallbackData* cbd = new LocatorToolCreationCallbackData((Vrui::LocatorTool*)data->tool);
             swig_type_info* ti = SWIG_TypeQueryModule(&swig_module, &swig_module,"LocatorToolCreationCallbackData *");
             obj = SWIG_NewPointerObj(SWIG_as_voidptr(cbd), ti, 0);
          }
-         else if (toolName.find("DraggingTool") != -1)
+         else if (toolName.find("DraggingTool") != std::string::npos)
          {
             DraggingToolCreationCallbackData* cbd = new DraggingToolCreationCallbackData((Vrui::DraggingTool*)data->tool);
             swig_type_info* ti = SWIG_TypeQueryModule(&swig_module, &swig_module, "DraggingToolCreationCallbackData *");
@@ -72,7 +75,6 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
       }
       else {
       }
-
       return obj; 
    }
 
@@ -92,7 +94,6 @@ class DraggingToolCreationCallbackData : public Misc::CallbackData
       /* Create the arguments list */
       PyObject* arglist; /* = Py_BuildValue("(O)", obj);*/
 
-      /*char* data = PyString_AsString(type_data->additional_data);*/
       if (type_data->additional_data != NULL)
       {
          arglist = Py_BuildValue("(OO)", obj, type_data->additional_data);
@@ -149,8 +150,7 @@ class CallbackList
             
             CallbackTypeData* type_data = new CallbackTypeData;
             type_data->func = PyFunc;
-            swig_module_info* swig_module = SWIG_Python_GetModule(0);
-            type_data->type_info = SWIG_TypeQueryModule(swig_module, swig_module, callbackClassName);
+            type_data->type_info = SWIG_TypeQueryModule(&swig_module, &swig_module, callbackClassName);
 
             type_data->additional_data = data;
 
@@ -162,6 +162,7 @@ class CallbackList
 };
 
 }
+
 
 
 /* Rename the python callback so that the re-routing mechanism is 
