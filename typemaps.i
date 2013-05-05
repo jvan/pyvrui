@@ -28,7 +28,7 @@
 }
 
 // Convert python list to Geometry::Vector object
-/%typemap(in) const Geometry::Vector<double, 3>& {
+%typemap(in) const Geometry::Vector<double, 3>& {
    PyObject* x = PyList_GetItem($input, 0);
    PyObject* y = PyList_GetItem($input, 1);
    PyObject* z = PyList_GetItem($input, 2);
