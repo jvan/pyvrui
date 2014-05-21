@@ -51,6 +51,7 @@ namespace Geometry
       public:
          OrthogonalTransformation(void);
          const Vector<double,3>& getTranslation(void) const;
+         Vector<double,3> getDirection(int j) const;
    };
 }
 
