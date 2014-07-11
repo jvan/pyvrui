@@ -28,8 +28,8 @@ setup(
    name = 'pyvrui',
    version = '0.1.0',
    author = 'Jordan Van Aalsburg',
-   author_email = 'jvan@cse.ucdavis.edu',
-   url = 'http://iviz.csc.ucdavis.edu/vroom',
+   author_email = 'iviz@lists.cse.ucdavis.edu',
+   url = 'https://github.com/comscictr/pyvrui',
    description = 'Python wraper for Vrui',
    ext_modules = [pyvrui_module],
    py_modules = ['pyvrui']
