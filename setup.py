@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-"""
-setup.py for pyvrui
-"""
-
 from distutils.core import setup, Extension
 import subprocess
 
@@ -30,7 +26,10 @@ setup(
    author = 'Jordan Van Aalsburg',
    author_email = 'iviz@lists.cse.ucdavis.edu',
    url = 'https://github.com/comscictr/pyvrui',
-   description = 'Python wraper for Vrui',
+   description = 'Python interface for Vrui',
    ext_modules = [pyvrui_module],
-   py_modules = ['pyvrui']
+   py_modules = ['pyvrui'],
+   data_files = [
+       ('examples', ['examples/*.py'])
+    ]
    )
